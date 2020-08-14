@@ -1,21 +1,56 @@
-var car,wall;
-var speed,weight;
+//Create variables here 
+var  dog, happyDog;
 
+var database;
+var foodS, foodStock;
 
-
+function preload()
+{
+  dogImg = loadImage("images/dogImg.png");
+  dogImg1 = loadImage("images/dogImg1.png");
+	//load images here
+}
 
 function setup() {
-  createCanvas(1600,400);
-  car=createSprite(50, 300, 50, 50);
-  wall= createSprite(1245, 300, 60,height/2);
-  car.velocityX = speed;
- 
- 
-  speed = random(100,200);
-  weight = random(400,1500);
-}
-function draw() {
-  background(255,255,255);  
+  createCanvas(500,500);
   
-  drawSprites();
+  dog = createSprite(250,250,10,10);
+  dog.addImage(dogImg)
+  
+  database = firebase.database();
+
+  foodStock = database.ref('Food');
+  foodStock.on("value", readStock());
+
+    
 }
+
+
+function draw() {  
+  background(46, 139, 87);
+  if(keyWentDown){
+    writeStock(foodS);
+    dog.addImage(dogImg1);
+  }
+
+  drawSprites();
+  //add styles here
+
+}
+
+function readStock(data){
+  foodS-data.val()
+}
+
+function writeStock (x){
+  if(x<=0){
+    x=0;
+  }else{
+    x=x-1;
+  }
+
+  database.ref('/').update({
+    Food: x 
+  })
+}
+
