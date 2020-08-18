@@ -1,56 +1,44 @@
-//Create variables here 
-var  dog, happyDog;
-
-var database;
-var foodS, foodStock;
-
-function preload()
-{
-  dogImg = loadImage("images/dogImg.png");
-  dogImg1 = loadImage("images/dogImg1.png");
-	//load images here
-}
+var car, wall;
+var speed, weight;
 
 function setup() {
-  createCanvas(500,500);
-  
-  dog = createSprite(250,250,10,10);
-  dog.addImage(dogImg)
-  
-  database = firebase.database();
+  createCanvas(1600, 400);
 
-  foodStock = database.ref('Food');
-  foodStock.on("value", readStock());
-
-    
+  speed = random(55, 90);
+  weight = random(400, 1500);
+  
 }
 
+function draw() {
+  background(255, 255, 255);  
+  
+  if(wall.x - car.x < (car.width + wall.width)/2)
+  {
+    car.velocityX = 0;
+    var deformation = 0.5 * weight * speed* speed/22509;
+    if(deformation>180)
+    {
+      car.shapeColor = color(255, 0, 0);
+    }
 
-function draw() {  
-  background(46, 139, 87);
-  if(keyWentDown){
-    writeStock(foodS);
-    dog.addImage(dogImg1);
+    if(deformation<180 && deformation>100)
+    {
+      car.shapeColor = color(230, 230, 0);
+    }
+
+    if(deformation<100)
+    {
+      car.shapeColor = color(0, 255, 0);
+    }
+    
   }
+
+  car = createSprite(50, 200, 50, 50);
+  car.velocityX = speed;
+
+  wall = createSprite(1400, 200, 60, height/2);
+  wall.shapeColor =color(80, 80, 80);
+
 
   drawSprites();
-  //add styles here
-
 }
-
-function readStock(data){
-  foodS-data.val()
-}
-
-function writeStock (x){
-  if(x<=0){
-    x=0;
-  }else{
-    x=x-1;
-  }
-
-  database.ref('/').update({
-    Food: x 
-  })
-}
-
